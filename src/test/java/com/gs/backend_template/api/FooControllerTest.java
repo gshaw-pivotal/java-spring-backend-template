@@ -1,9 +1,14 @@
 package com.gs.backend_template.api;
 
+import com.gs.backend_template.model.Foo;
+import com.gs.backend_template.service.FooService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -16,6 +21,9 @@ class FooControllerTest {
 
     private MockMvc mockMvc;
 
+    @Mock
+    private FooService fooService;
+
     @InjectMocks
     private FooController fooController;
 
@@ -27,42 +35,71 @@ class FooControllerTest {
 
     @Test
     public void testGetFoo() throws Exception {
-        String fooId = "1";
+        int fooId = 1;
+
+        Mockito.when(fooService.getFoo(fooId)).thenReturn(Foo.builder().id(fooId).desc("").build());
+
         MvcResult result = mockMvc.perform(get("/api/foo/" + fooId))
                 .andExpect(status().is(200))
                 .andReturn();
 
         assertTrue(result.getResponse().getContentAsString().contains("Get Foo " + fooId));
+
+        Mockito.verify(fooService).getFoo(fooId);
     }
 
     @Test
     public void testPostFoo() throws Exception {
-        String foo = "foo-request";
-        MvcResult result = mockMvc.perform(post("/api/foo").content(foo))
+        String fooDesc = "foo-request";
+        Foo foo = Foo.builder().desc(fooDesc).build();
+        Foo serviceFoo = Foo.builder().id(1).desc(fooDesc).build();
+
+        Mockito.when(fooService.addFoo(foo)).thenReturn(serviceFoo);
+
+        MvcResult result = mockMvc.perform(post("/api/foo")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"desc\":  \"" + fooDesc + "\"}"))
                 .andExpect(status().is(201))
                 .andReturn();
 
         assertTrue(result.getResponse().getContentAsString().contains("Post Foo " + foo));
+
+        Mockito.verify(fooService).addFoo(foo);
     }
 
     @Test
     public void testPutFoo() throws Exception {
-        String foo = "foo-request";
-        String fooId = "1";
-        MvcResult result = mockMvc.perform(put("/api/foo/" + fooId).content(foo))
+        String fooDesc = "foo-request";
+        int fooId = 1;
+
+        Foo foo = Foo.builder().id(fooId).desc(fooDesc).build();
+        Foo serviceFoo = Foo.builder().id(fooId).desc(fooDesc).build();
+
+        Mockito.when(fooService.updateFoo(fooId, foo)).thenReturn(serviceFoo);
+
+        MvcResult result = mockMvc.perform(put("/api/foo/" + fooId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"id\": " + fooId + ", \"desc\":  \"" + fooDesc + "\"}"))
                 .andExpect(status().is(200))
                 .andReturn();
 
         assertTrue(result.getResponse().getContentAsString().contains("Put Foo " + fooId + " " + foo));
+
+        Mockito.verify(fooService).updateFoo(fooId, foo);
     }
 
     @Test
     public void testDeleteFoo() throws Exception {
-        String fooId = "1";
+        int fooId = 1;
+
+        Mockito.when(fooService.deleteFoo(fooId)).thenReturn(Foo.builder().id(fooId).desc("").build());
+
         MvcResult result = mockMvc.perform(delete("/api/foo/" + fooId))
                 .andExpect(status().is(200))
                 .andReturn();
 
         assertTrue(result.getResponse().getContentAsString().contains("Delete Foo " + fooId));
+
+        Mockito.verify(fooService).deleteFoo(fooId);
     }
 }
