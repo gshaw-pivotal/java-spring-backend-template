@@ -17,32 +17,28 @@ public class FooController {
     @GetMapping(
             value = "/api/foo/{id}"
     )
-    public ResponseEntity<String> getFoo(@PathVariable int id) {
-        fooService.getFoo(id);
-        return ResponseEntity.ok("Get Foo " + id);
+    public ResponseEntity<Foo> getFoo(@PathVariable int id) {
+        return ResponseEntity.ok(fooService.getFoo(id));
     }
 
     @PostMapping(
             value = "/api/foo"
     )
-    public ResponseEntity<String> postFoo(@RequestBody Foo foo) {
-        fooService.addFoo(foo);
-        return ResponseEntity.status(201).body("Post Foo " + foo);
+    public ResponseEntity<Foo> postFoo(@RequestBody Foo foo) {
+        return ResponseEntity.status(201).body(fooService.addFoo(foo));
     }
 
     @PutMapping(
             value = "/api/foo/{id}"
     )
-    public ResponseEntity<String> putFoo(@PathVariable int id, @RequestBody Foo foo) {
-        fooService.updateFoo(id, foo);
-        return ResponseEntity.ok("Put Foo " + id + " " + foo);
+    public ResponseEntity<Foo> putFoo(@PathVariable int id, @RequestBody Foo foo) {
+        return ResponseEntity.ok(fooService.updateFoo(id, foo));
     }
 
     @DeleteMapping(
             value = "/api/foo/{id}"
     )
-    public ResponseEntity<String> deleteFoo(@PathVariable int id) {
-        fooService.deleteFoo(id);
-        return ResponseEntity.ok("Delete Foo " + id);
+    public ResponseEntity<Foo> deleteFoo(@PathVariable int id) {
+        return ResponseEntity.ok(fooService.deleteFoo(id));
     }
 }

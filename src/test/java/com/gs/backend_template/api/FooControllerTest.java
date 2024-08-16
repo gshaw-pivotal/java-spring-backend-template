@@ -36,14 +36,15 @@ class FooControllerTest {
     @Test
     public void testGetFoo() throws Exception {
         int fooId = 1;
+        Foo returnedFoo = Foo.builder().id(fooId).desc("").build();
 
-        Mockito.when(fooService.getFoo(fooId)).thenReturn(Foo.builder().id(fooId).desc("").build());
+        Mockito.when(fooService.getFoo(fooId)).thenReturn(returnedFoo);
 
         MvcResult result = mockMvc.perform(get("/api/foo/" + fooId))
                 .andExpect(status().is(200))
                 .andReturn();
 
-        assertTrue(result.getResponse().getContentAsString().contains("Get Foo " + fooId));
+        assertEquals("{\"id\":1,\"desc\":\"\"}", result.getResponse().getContentAsString());
 
         Mockito.verify(fooService).getFoo(fooId);
     }
@@ -62,7 +63,7 @@ class FooControllerTest {
                 .andExpect(status().is(201))
                 .andReturn();
 
-        assertTrue(result.getResponse().getContentAsString().contains("Post Foo " + foo));
+        assertEquals("{\"id\":1,\"desc\":\"" + fooDesc + "\"}", result.getResponse().getContentAsString());
 
         Mockito.verify(fooService).addFoo(foo);
     }
@@ -83,7 +84,7 @@ class FooControllerTest {
                 .andExpect(status().is(200))
                 .andReturn();
 
-        assertTrue(result.getResponse().getContentAsString().contains("Put Foo " + fooId + " " + foo));
+        assertEquals("{\"id\":1,\"desc\":\"" + fooDesc + "\"}", result.getResponse().getContentAsString());
 
         Mockito.verify(fooService).updateFoo(fooId, foo);
     }
@@ -91,14 +92,15 @@ class FooControllerTest {
     @Test
     public void testDeleteFoo() throws Exception {
         int fooId = 1;
+        String fooDesc = "foo-delete";
 
-        Mockito.when(fooService.deleteFoo(fooId)).thenReturn(Foo.builder().id(fooId).desc("").build());
+        Mockito.when(fooService.deleteFoo(fooId)).thenReturn(Foo.builder().id(fooId).desc(fooDesc).build());
 
         MvcResult result = mockMvc.perform(delete("/api/foo/" + fooId))
                 .andExpect(status().is(200))
                 .andReturn();
 
-        assertTrue(result.getResponse().getContentAsString().contains("Delete Foo " + fooId));
+        assertEquals("{\"id\":1,\"desc\":\"" + fooDesc + "\"}", result.getResponse().getContentAsString());
 
         Mockito.verify(fooService).deleteFoo(fooId);
     }
