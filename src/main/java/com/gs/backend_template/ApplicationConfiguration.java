@@ -1,7 +1,7 @@
 package com.gs.backend_template;
 
 import com.gs.backend_template.database.FooRepository;
-import com.gs.backend_template.model.Foo;
+import com.gs.backend_template.database.InMemoryFooRepository;
 import com.gs.backend_template.service.FooService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,26 +16,6 @@ public class ApplicationConfiguration {
 
     @Bean
     public FooRepository fooRepository() {
-        return new FooRepository() {
-            @Override
-            public Foo addFoo(Foo foo) {
-                return null;
-            }
-
-            @Override
-            public Foo deleteFoo(int id) {
-                return null;
-            }
-
-            @Override
-            public Foo updateFoo(int id, Foo foo) {
-                return null;
-            }
-
-            @Override
-            public Foo getFoo(int id) {
-                return null;
-            }
-        };
+        return new com.gs.backend_template.database.InMemoryFooRepository();
     }
 }
