@@ -1,7 +1,7 @@
 package com.gs.backend_template;
 
 import com.gs.backend_template.database.FooRepository;
-import com.gs.backend_template.database.InMemoryFooRepository;
+import com.gs.backend_template.database.H2FooRepository;
 import com.gs.backend_template.service.FooService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,8 +14,13 @@ public class ApplicationConfiguration {
         return new FooService(fooRepository);
     }
 
+//    @Bean
+//    public FooRepository fooRepository() {
+//        return new com.gs.backend_template.database.InMemoryFooRepository();
+//    }
+
     @Bean
     public FooRepository fooRepository() {
-        return new com.gs.backend_template.database.InMemoryFooRepository();
+        return new H2FooRepository();
     }
 }

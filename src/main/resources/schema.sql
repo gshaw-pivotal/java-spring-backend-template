@@ -1,0 +1,4 @@
+CREATE TABLE FOO(
+  id INT NOT NULL AUTO_INCREMENT,
+  desc varchar(255)
+);
