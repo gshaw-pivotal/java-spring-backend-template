@@ -34,4 +34,10 @@ public class InMemoryFooRepository implements FooRepository {
     public Foo getFoo(int id) {
         return foos.get(id);
     }
+
+    @Override
+    public void loadFoo(Foo foo) {
+        foos.put(foo.getId(), foo);
+        nextId = foo.getId() + 1;
+    }
 }

@@ -11,4 +11,6 @@ public interface FooRepository {
     Foo updateFoo(int id, Foo foo);
 
     Foo getFoo(int id);
+
+    void loadFoo(Foo foo);
 }

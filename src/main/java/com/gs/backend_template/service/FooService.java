@@ -3,6 +3,8 @@ package com.gs.backend_template.service;
 import com.gs.backend_template.database.FooRepository;
 import com.gs.backend_template.model.Foo;
 
+import java.util.List;
+
 public class FooService {
 
     private final FooRepository fooRepository;
@@ -25,5 +27,11 @@ public class FooService {
 
     public Foo getFoo(int id) {
         return fooRepository.getFoo(id);
+    }
+
+    public void loadFoos(List<Foo> foos) {
+        for (Foo foo : foos) {
+            fooRepository.loadFoo(foo);
+        }
     }
 }

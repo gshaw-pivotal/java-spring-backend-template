@@ -12,7 +12,7 @@ public class H2FooRepository implements FooRepository {
 
     private String dbPass;
 
-    private final String insertFoo = "insert into foo (desc) values ('%s')";
+    private final String insertFoo = "insert into foo (id, desc) values (%s, '%s')";
 
     private final String updateFoo = "update foo set desc = '%s' where id = %s";
 
@@ -37,9 +37,13 @@ public class H2FooRepository implements FooRepository {
 
             if (conn != null) {
                 Statement stmt = conn.createStatement();
-                stmt.executeUpdate(String.format(insertFoo, foo.getDesc()));
 
                 ResultSet rs = stmt.executeQuery(getLastId);
+                if (rs.next()) {
+                    stmt.executeUpdate(String.format(insertFoo, rs.getInt(1) + 1, foo.getDesc()));
+                }
+
+                rs = stmt.executeQuery(getLastId);
 
                 if (rs.next()) {
                     resultFoo = getFoo(rs.getInt(1));
@@ -50,6 +54,7 @@ public class H2FooRepository implements FooRepository {
                 return resultFoo;
             }
         } catch (SQLException e) {
+            System.out.println("addFoo Exception: " + e.getMessage());
             return null;
         }
 
@@ -76,6 +81,7 @@ public class H2FooRepository implements FooRepository {
                 return resultFoo;
             }
         } catch (SQLException e) {
+            System.out.println("deleteFoo Exception: " + e.getMessage());
             return null;
         }
 
@@ -100,6 +106,7 @@ public class H2FooRepository implements FooRepository {
                 return resultFoo;
             }
         } catch (SQLException e) {
+            System.out.println("updateFoo Exception: " + e.getMessage());
             return null;
         }
 
@@ -126,10 +133,27 @@ public class H2FooRepository implements FooRepository {
                 return resultFoo;
             }
         } catch (SQLException e) {
+            System.out.println("getFoo Exception: " + e.getMessage());
             return null;
         }
 
         return null;
+    }
+
+    @Override
+    public void loadFoo(Foo foo) {
+        try {
+            Connection conn = getConnection();
+
+            if (conn != null) {
+                Statement stmt = conn.createStatement();
+                stmt.executeUpdate(String.format(insertFoo, foo.getId(), foo.getDesc()));
+
+                conn.close();
+            }
+        } catch (SQLException e) {
+            System.out.println("loadFoo Exception: " + e.getMessage());
+        }
     }
 
     private Connection getConnection() {
